@@ -1,0 +1,46 @@
+# the code to remove a row containing max ( < 1) from a np array
+import numpy as np
+import sklearn.metrics as metrics
+np.random.seed(12345)
+b=np.random.random((381, 1500))
+print(b)
+
+dm=metrics.pairwise.cosine_distances(b)
+#print(dm)
+imat=np.eye(dm.shape[0],dtype='int')
+dm=dm+imat
+dmm=dm
+dm=dm[181:,:180]
+min_i=-999
+n=3
+k=-1
+for n in range(5):
+  print("n is : %d"% n)
+  l_md=[]
+  i_l=[]
+  l_idx_md=[]
+  for i in range(dm.shape[0]):
+      #print("i is %d "% i)
+      #print(dm[i,:])
+      #print("Min %d values are: "% n)
+      n_idx=(dm[i,:]*-1).argsort()[-n:][::-1]
+      #print(dm[i,n_idx])
+      #print("Mean of min %d values is: "% n)
+      #print(np.mean(dm[i,n_idx]))
+      l_md.append(np.mean(dm[i,n_idx]))
+      l_idx_md.append(n_idx)
+      i_l.append(i)
+      #print("*"*20)
+    
+  #print(i_l)
+  #print(l_idx_md)
+  #print(l_md)
+  m_idx=(np.asarray(l_md)*-1).argsort()[-1:][::-1]
+  #print(m_idx)
+  remove_idx=(np.asarray(np.asarray(i_l)[m_idx]))
+  #print(remove_idx)
+  rem_b=np.delete(b,remove_idx,axis=0)
+  k=k+1
+  print("Removing file number: %d"% int(remove_idx+k))
+  print(rem_b.sum())
+  b=rem_b
